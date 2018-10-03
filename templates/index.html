@@ -1,0 +1,45 @@
+{%extends "base.html"%}
+{%block index%}
+<div class=row>
+    <div class=col></div>
+    <div class=col>
+            <p class="lead">{{ date.strftime('%B') }}</p>
+
+    </div>
+    <div class=col></div>
+</div>
+<div class="row pb-3">
+    <div class="col"></div>
+    <div class="col">
+        <table data-toggle="table">
+            <thead>
+                <tr>
+                    <th>Staff</th>
+                    <th>List</th>
+                    <th>Completed/Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for key,value in staff.items():%}
+                <tr>
+                    <td>{{key}}</td>
+                    <td><a href = "/admin/{{key}}">Current Agent List</a></td>
+                    <td>{{value}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+    <div class="col"></div>
+</div>
+<div class="row">
+        <div class=col-3></div>
+        <div class=col-6>
+            <p> Agent Count :{{agentcount}} </p>
+            <p><a href="/editstaff">Manage Staff</a></p>
+            <p><a href="/startnewmonth">Reset/Start New Month</a></p>
+        </div>
+        <div class="col-3"></div>
+</div>
+{%endblock%}
+

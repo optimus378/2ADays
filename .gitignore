@@ -1,0 +1,5 @@
+static/records
+venv/
+.vscode/
+__pychache__
+__pycache__/

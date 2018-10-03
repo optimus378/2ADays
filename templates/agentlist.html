@@ -1,0 +1,72 @@
+{%extends "base.html"%}
+{%block index%}
+<p class = "lead">Agent List for {{staffmember}}</p>
+<p><a href="/">Back</a></p>
+
+<div class="row pt-1">
+<div class ="col-sm"></div>
+<div class = "col-sm">
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <!-- <strong>Title</strong> --> {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+</div>
+<div class="col-sm"></div>
+</div>
+<div class="row pt-3">
+    <div class="col-sm"></div>
+    <div class="col-sm-12 col-lg">
+        <table data-toggle="table"  data-page-size="100">
+            <thead>
+                <tr>
+                    <th>Agent Name</th>
+                    <th>Mobile Number</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for agent in agentlist%}
+                <tr>
+                    <td><a href="#theModal" class="nav-link" data-remote="/agentpage/{{agent._id}}" data-toggle="modal" data-target="#theModal">{{agent.agentname}}</a></td>
+                    <td>{{agent.mobilenumber}}</td>
+                    {%if agent.currentInteraction%}
+                        {%if (agent.currentInteraction == 'Voicemail') or (agent.currentInteraction == 'Talked') or (agent.currentInteraction == 'Other'):%}
+                        <td class= "text-success">{{agent.currentInteraction}}</td>
+                        {%else%}
+                        <td>{{agent.currentInteraction}}</td>
+                        {%endif%}
+                    {%else%}
+                    <td>None</td>
+                    {%endif%}
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm"></div>
+</div>
+<div class= "row pt-3 pb-5">
+    <div class=col-3></div>
+    <div class=col-6>
+    <p><a href="/">Back</a></p>
+    </div>
+    <div class=col-3></div>
+    </div>
+<div class="modal fade" id="theModal">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+                <div class="modal-body"></div>
+    </div>
+    </div>
+    <div class="col-3"></div>
+<script defer src = "/static/js/modal.js"></script>
+{%endblock%}
+
