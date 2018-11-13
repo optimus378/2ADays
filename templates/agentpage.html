@@ -75,7 +75,7 @@
             <tbody id ="commentBody">
             {%if agent.comments%}
 
-            {%for i in agent.comments%}
+            {%for i in agent.comments| sort(attribute='date', reverse=True)%}
             <tr>
                     <td>{{i.StaffName}}</td>
                     <td>{{i.date.strftime('%Y-%m-%d')}}</td>

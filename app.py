@@ -101,4 +101,4 @@ def agentpage(agentid):
     return render_template('agentpage.html' , agent=agent, form = form)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.120.53')
+    app.run(debug=True, host='localhost')
