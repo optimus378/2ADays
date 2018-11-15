@@ -15,7 +15,7 @@ staffcol = db.staff
 archivecol = db.archive
 
 def syncSPList():
-	s = sharepy.connect('https://kwaustin.sharepoint.com',"matt@kwaustinnw.com","Kwrocks#1")
+	s = sharepy.connect('https://kwaustin.sharepoint.com',"None","None")
 	r = s.get("https://kwaustin.sharepoint.com/am/_api/web/lists/GetByTitle('Agents')/Items?$select=Real_x0020_Estate_x0020_License_,FullName,CellPhone,Top20Percent&$filter=New_x0020_Agent_x0020_Status eq 'Active Agent' or New_x0020_Agent_x0020_Status eq 'New Agent'&$skiptoken=Paged=TRNE&$top=1000", headers={"accept": "application/json; odata=nometadata"})
 	splist = r.json()
 	spdict = splist['value']
