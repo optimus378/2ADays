@@ -10,15 +10,15 @@ import json
 from werkzeug.utils import secure_filename
 import os
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'SlippyityDippyDo@#$dry(&^%ASDFG'
+app.config['SECRET_KEY'] = 'asdfasdf'
 UPLOAD_FOLDER = 'static/temp/'
 ALLOWED_EXTENSIONS = set(['csv'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 blueprint = make_azure_blueprint(
-    client_id="ba4e34af-82c5-4c8b-b3ca-1eff00c32364",
-    client_secret="|*sIk8LgD_DQ>0=(u;bJ4c3A#A6zg#q5+.a*Vlz5.p^cUuOGQjF",
-    tenant='a473beb5-67e7-4894-bee3-c63cfd03441e'
+    client_id="clientID",
+    client_secret="Secret",
+    tenant='TenantID'
 )
 app.register_blueprint(blueprint, url_prefix="/login")
 
