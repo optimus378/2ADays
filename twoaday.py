@@ -15,7 +15,7 @@ staffcol = db.staff
 archivecol = db.archive
 
 def syncSPList():
-	s = sharepy.connect('https://kwaustin.sharepoint.com',"None","None")
+	s = sharepy.connect('https://kwaustin.sharepoint.com',"matt@kwaustinnw.com","Kwrocks#1")
 	r = s.get("https://kwaustin.sharepoint.com/am/_api/web/lists/GetByTitle('Agents')/Items?$select=Real_x0020_Estate_x0020_License_,FullName,CellPhone,Top20Percent&$filter=New_x0020_Agent_x0020_Status eq 'Active Agent' or New_x0020_Agent_x0020_Status eq 'New Agent'&$skiptoken=Paged=TRNE&$top=1000", headers={"accept": "application/json; odata=nometadata"})
 	splist = r.json()
 	spdict = splist['value']
@@ -150,14 +150,18 @@ def importTop20(filename):
 	## take top20 percent of gci list 
 	moretwentypercent = round(float(0.20)*len(jsonload)) +1
 	moretop20list = jsonload[0:moretwentypercent]
+	print(moretop20list)
+	print(len(moretop20list))
 	## Find Existing top20 Agents in Database and compare with new MORE Top 20 List.
 	top20dbquery = agentcol.find({'production':'top20'})
 	dbtop20 = []
 	for i in top20dbquery:
 		dbtop20.append(i)  
+	dbtop20ids = [i['_id'] for i in top20dbquery]
+	moretop20ids = [i['REA Number'] for i in moretop20list]
 	## If Agent is no longer in top 20 from new Morelist, change to lower80
-	for i in dbtop20:
-		if i['production'] not in moretop20list:
+	for i in dbtop20ids:
+		if i not in moretop20ids:
 			agentcol.find_one_and_update({'_id':i},{'$set':{'production':'lower80'}})
 	## If agent is in new More top20 list, change to production to top20
 	for i in moretop20list:

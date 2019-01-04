@@ -1,4 +1,5 @@
 from flask import Flask, render_template,request, redirect, url_for, flash, abort, send_file,abort, Response
+from flask_dance.contrib.azure import azure, make_azure_blueprint
 import datetime
 import sharepy
 import twoaday
@@ -13,6 +14,15 @@ app.config['SECRET_KEY'] = 'SlippyityDippyDo@#$dry(&^%ASDFG'
 UPLOAD_FOLDER = 'static/temp/'
 ALLOWED_EXTENSIONS = set(['csv'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+blueprint = make_azure_blueprint(
+    client_id="ba4e34af-82c5-4c8b-b3ca-1eff00c32364",
+    client_secret="|*sIk8LgD_DQ>0=(u;bJ4c3A#A6zg#q5+.a*Vlz5.p^cUuOGQjF",
+    tenant='a473beb5-67e7-4894-bee3-c63cfd03441e'
+)
+app.register_blueprint(blueprint, url_prefix="/login")
+
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -31,8 +41,13 @@ class uploadTop20(FlaskForm):
 class EditStaff(FlaskForm):
     staffname = StringField()
 
+
 @app.route('/',methods=['GET','POST'])
 def index():
+    if not azure.authorized:
+        return redirect(url_for("azure.login"))
+    resp = azure.get("/v1.0/me")
+    assert resp.ok
     staff = twoaday.listStaff()
     date = datetime.datetime.now()
     agentcount = twoaday.agentcol.count()
