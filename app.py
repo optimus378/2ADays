@@ -46,12 +46,16 @@ class EditStaff(FlaskForm):
 def index():
     if not azure.authorized:
         return redirect(url_for("azure.login"))
-    resp = azure.get("/v1.0/me")
-    assert resp.ok
-    staff = twoaday.listStaff()
-    date = datetime.datetime.now()
-    agentcount = twoaday.agentcol.count()
-    return render_template("index.html", staff = staff, date =date, agentcount = agentcount)
+    try:
+        resp = azure.get("/v1.0/me")
+        assert resp.ok
+        staff = twoaday.listStaff()
+        date = datetime.datetime.now()
+        agentcount = twoaday.agentcol.count()
+        return render_template("index.html", staff = staff, date =date, agentcount = agentcount)
+    except:
+        return redirect(url_for("azure.login"))
+    
 
 @app.route('/admin/<staffmember>')
 def stafflist(staffmember):
