@@ -9,17 +9,19 @@ from wtforms.validators import InputRequired, Email, Length, NumberRange
 import json
 from werkzeug.utils import secure_filename
 import os
+from oauthlib.oauth2.rfc6749.errors import InvalidClientIdError
+from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'asdfasdf'
+app.config['SECRET_KEY'] = 'asdfaioasdfkjhasdfkljh349856@#$^@#&@$%UDFHSDFH@#$589234y6oiapdfhgna9088q34258'
 UPLOAD_FOLDER = 'static/temp/'
 ALLOWED_EXTENSIONS = set(['csv'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 blueprint = make_azure_blueprint(
-    client_id="clientID",
-    client_secret="Secret",
-    tenant='TenantID'
-)
+    client_id="A Thing",
+    client_secret="A Secret",
+    tenant='A Tentant',)
+
 app.register_blueprint(blueprint, url_prefix="/login")
 
 
@@ -41,20 +43,21 @@ class uploadTop20(FlaskForm):
 class EditStaff(FlaskForm):
     staffname = StringField()
 
-
+@app.errorhandler(TokenExpiredError)
+def token_expired(_):
+    del app.blueprints['azure'].token
+    return redirect(url_for('index'))
+    
 @app.route('/',methods=['GET','POST'])
 def index():
     if not azure.authorized:
         return redirect(url_for("azure.login"))
-    try:
-        resp = azure.get("/v1.0/me")
-        assert resp.ok
-        staff = twoaday.listStaff()
-        date = datetime.datetime.now()
-        agentcount = twoaday.agentcol.count()
-        return render_template("index.html", staff = staff, date =date, agentcount = agentcount)
-    except:
-        return redirect(url_for("azure.login"))
+    resp = azure.get("/v1.0/me")
+    assert resp.ok
+    staff = twoaday.listStaff()
+    date = datetime.datetime.now()
+    agentcount = twoaday.agentcol.count()
+    return render_template("index.html", staff = staff, date =date, agentcount = agentcount)
     
 
 @app.route('/admin/<staffmember>')
